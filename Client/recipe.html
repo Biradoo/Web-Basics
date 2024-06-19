@@ -9,9 +9,9 @@
     <script defer src="src/scripts/recipe.js"></script>
 </head>
 <body>
-    <img class="recipe-haven-logo" src="assets/logo.png" width="500" height="65">
+<img class="recipe-haven-logo" src="assets/logo.png" width="500" height="65">
 
-    <hr class="separator">
+<hr class="separator">
 <header class="colored">
     <nav>
         <a href="index.html">Home</a>
@@ -21,7 +21,13 @@
     </nav>
 </header>
 <main class="container">
-    <section class="individual-recipe-details" id="individual-recipe-details"></section>
+    <div class="recipe-and-ingredients">
+        <section class="individual-recipe-details" id="individual-recipe-details"></section>
+        <section class="recipe-ingredients" id="recipe-ingredients"></section>
+    </div>
+
+    <button class="edit-button" onclick="openEditRecipe()">Edit Recipe</button>
+    <button class="delete-button" onclick="deleteRecipe()">Delete Recipe</button>
 
     <section id="reviews-section" class="reviews-section"></section>
 
@@ -44,6 +50,41 @@
     </section>
 </main>
 
+<div id="editRecipeModal" class="modify">
+    <div class="modify-content">
+        <span class="close" onclick="closeModify()">&times;</span>
+        <h2>Edit Recipe</h2>
+        <form id="edit-recipe-form">
+            <label for="edit-description">Description:</label>
+            <textarea id="edit-description" name="description" rows="4" required></textarea>
+            <button type="submit">Submit Changes</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="editReviewModify" class="modify">
+    <div class="modify-content">
+        <span class="close">&times;</span>
+        <h2>Edit Review</h2>
+        <form id="edit-review-form">
+            <input type="hidden" id="edit-review-id">
+            <label for="edit-rating">Rating:</label>
+            <select id="edit-rating" name="rating" required>
+                <option value="">Select rating</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <label for="edit-comment">Comment:</label>
+            <textarea id="edit-comment" name="comment" rows="4" required></textarea>
+            <button type="submit">Update Review</button>
+        </form>
+    </div>
+</div>
+
 <footer class="footerClass">
     <div class="footer-left">
         <img class="recipe-haven-logo" src="assets/logo.png">
@@ -62,7 +103,6 @@
         <ul class="footer-links">
             <li><a class="footerButtons" href="recipes.html">All recipes</a></li>
             <li><a class="footerButtons" href="categories.html">By Category</a></li>
-            <li><a class="footerButtons" href="#">By meat-type</a></li>
         </ul>
     </div>
 </footer>

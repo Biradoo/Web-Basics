@@ -1,42 +1,39 @@
-import Review from '../models/reviewModel.js';
+import * as Review from '../models/reviewModel.js';
 
 export const getAllReviews = (req, res) => {
-    Review.getAll((err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const rows = Review.getAllReviews();
+        res.status(200).json({
             "message": "success",
             "data": rows
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const getReviewById = (req, res) => {
-    Review.getById(req.params.id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const row = Review.getReviewById(req.params.id);
+        res.status(200).json({
             "message": "success",
             "data": row
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const getReviewsByRecipeId = (req, res) => {
-    Review.getByRecipeId(req.params.recipeId, (err, rows) => {
-        if (err) {
-            res.status(400).json({"error": err.message});
-            return;
-        }
-        res.json({
+    try {
+        const rows = Review.getReviewsByRecipeId(req.params.recipeId);
+        res.status(200).json({
             "message": "success",
             "data": rows
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const createReview = (req, res) => {
@@ -46,17 +43,16 @@ export const createReview = (req, res) => {
         comment: req.body.comment,
         date: new Date().toISOString().split('T')[0]
     };
-    Review.create(data, (err, id) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const id = Review.createReview(data);
+        res.status(201).json({
             "message": "success",
             "data": data,
             "id": id
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const updateReview = (req, res) => {
@@ -64,28 +60,26 @@ export const updateReview = (req, res) => {
         rating: req.body.rating,
         comment: req.body.comment
     };
-    Review.update(req.params.id, data, (err, changes) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const changes = Review.updateReview(req.params.id, data);
+        res.status(200).json({
             "message": "success",
             "data": data,
             "changes": changes
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const deleteReview = (req, res) => {
-    Review.delete(req.params.id, (err, changes) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const changes = Review.deleteReview(req.params.id);
+        res.status(200).json({
             "message": "deleted",
             "changes": changes
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };

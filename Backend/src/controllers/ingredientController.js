@@ -1,51 +1,39 @@
-import Ingredient from '../models/ingredientModel.js';
-
+import * as Ingredient from '../models/ingredientModel.js';
 
 export const getAllIngredients = (req, res) => {
-    Ingredient.getAll((err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const rows = Ingredient.getAllIngredients();
+        res.status(200).json({
             "message": "success",
             "data": rows
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const getIngredientById = (req, res) => {
-    Ingredient.getById(req.params.id, (err, row) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        if (!row) {
-            res.status(404).json({ "message": "Ingredient not found" });
-            return;
-        }
-        res.json({
+    try {
+        const row = Ingredient.getIngredientById(req.params.id);
+        res.status(200).json({
             "message": "success",
             "data": row
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
-export const getIngredientsForRecipe = (req, res) => {
-    Ingredient.getByRecipeId(req.query.recipe_id, (err, rows) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        if (rows.length === 0) {
-            res.status(404).json({ "message": "No ingredients found for this recipe" });
-            return;
-        }
-        res.json({
+export const getIngredientsByRecipeId = (req, res) => {
+    try {
+        const ingredients = Ingredient.getIngredientsByRecipeId(req.params.recipeId);
+        res.status(200).json({
             "message": "success",
-            "data": rows
+            "data": ingredients
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const createIngredient = (req, res) => {
@@ -55,17 +43,16 @@ export const createIngredient = (req, res) => {
         unit: req.body.unit,
         quantity: req.body.quantity
     };
-    Ingredient.create(data, (err, id) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const id = Ingredient.createIngredient(data);
+        res.status(201).json({
             "message": "success",
             "data": data,
             "id": id
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const updateIngredient = (req, res) => {
@@ -74,28 +61,26 @@ export const updateIngredient = (req, res) => {
         unit: req.body.unit,
         quantity: req.body.quantity
     };
-    Ingredient.update(req.params.id, data, (err, changes) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const changes = Ingredient.updateIngredient(req.params.id, data);
+        res.status(200).json({
             "message": "success",
             "data": data,
             "changes": changes
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };
 
 export const deleteIngredient = (req, res) => {
-    Ingredient.delete(req.params.id, (err, changes) => {
-        if (err) {
-            res.status(400).json({ "error": err.message });
-            return;
-        }
-        res.json({
+    try {
+        const changes = Ingredient.deleteIngredient(req.params.id);
+        res.status(200).json({
             "message": "deleted",
             "changes": changes
         });
-    });
+    } catch (err) {
+        res.status(400).json({ "error": err.message });
+    }
 };

@@ -1,92 +1,66 @@
 import db from '../database.js';
 
-class Recipe {
-    static getAll(callback) {
-        const sql = "SELECT * FROM recipes";
-        db.all(sql, [], (err, rows) => {
-            callback(err, rows);
-        });
+export const getAllRecipes = (filters = {}) => {
+    let sql = "SELECT * FROM recipes";
+    const params = [];
+
+    const conditions = [];
+    if (filters.type_of_meat) {
+        conditions.push("type_of_meat = ?");
+        params.push(filters.type_of_meat);
+    }
+    if (filters.prepTime) {
+        conditions.push("prepTime <= ?");
+        params.push(filters.prepTime);
+    }
+    if (filters.course) {
+        conditions.push("course = ?");
+        params.push(filters.course);
     }
 
-    static getById(id, callback) {
-        const sql = "SELECT * FROM recipes WHERE recipe_id = ?";
-        const params = [id];
-        db.get(sql, params, (err, row) => {
-            callback(err, row);
-        });
+    if (conditions.length > 0) {
+        sql += " WHERE " + conditions.join(" AND ");
     }
 
-    static getReviewsById(id, callback) {
-        const sql = "SELECT * FROM reviews WHERE recipe_id = ?";
-        const params = [id];
-        db.all(sql, [params], (err , rows) => {
-            callback(err, rows);
-        });
-    }
+    console.log('SQL Query:', sql); // Debugging line
+    console.log('Parameters:', params); // Debugging line
 
-    static getQuickAndEasy(callback) {
-        const sql = "SELECT * FROM recipes WHERE prepTime < 30";
-        db.all(sql, [], (err, rows) => {
-            callback(err, rows);
-        });
-    }
 
-    static getByTypeOfMeat(type_of_meat, callback) {
-        const sql = "SELECT * FROM recipes WHERE type_of_meat = ?";
-        const params = [type_of_meat];
-        db.all(sql, params, (err, rows) => {
-            callback(err, rows);
-        });
-    }
+    return db.prepare(sql).all(...params);
+};
 
-    static getByCourse(course, callback) {
-        const sql = "SELECT * FROM recipes WHERE course = ?";
-        const params = [course];
-        db.all(sql, params, (err, rows) => {
-            callback(err, rows);
-        });
-    }
 
-    static getByCategory(category, callback) {
-        if (category.toLowerCase() === 'quick and easy') {
-            return this.getQuickAndEasy(callback);
-        } else if (['starters', 'main', 'dessert'].includes(category.toLowerCase())) {
-            return this.getByCourse(category, callback);
-        } else {
-            return this.getByTypeOfMeat(category, callback);
-        }
-    }
+export const getRecipeById = (id) => {
+    const sql = "SELECT * FROM recipes WHERE recipe_id = ?";
+    return db.prepare(sql).get(id);
+};
 
-    static create(data, callback) {
-        const sql = 'INSERT INTO recipes (name, type_of_meat, course, description, prepTime, image_url) VALUES (?,?,?,?,?,?)';
-        const params = [data.name, data.type_of_meat, data.course, data.description, data.prepTime, data.image_url];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.lastID : null);
-        });
-    }
+export const getReviewsByRecipeId = (id) => {
+    const sql = "SELECT * FROM reviews WHERE recipe_id = ?";
+    return db.prepare(sql).all(id);
+};
 
-    static update(id, data, callback) {
-        const sql = `UPDATE recipes SET 
-                     name = COALESCE(?,name), 
-                     type_of_meat = COALESCE(?,type_of_meat), 
-                     course = COALESCE(?,course), 
-                     description = COALESCE(?,description),
-                     prepTime = COALESCE(?,prepTime),
-                     image_url = COALESCE(?,image_url)
-                     WHERE recipe_id = ?`;
-        const params = [data.name, data.type_of_meat, data.course, data.description, data.prepTime, data.image_url, id];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.changes : null);
-        });
-    }
+export const createRecipe = (data) => {
+    const sql = 'INSERT INTO recipes (name, type_of_meat, course, description, prepTime, image_url) VALUES (?, ?, ?, ?, ?, ?)';
+    const result = db.prepare(sql).run(data.name, data.type_of_meat, data.course, data.description, data.prepTime, data.image_url);
+    return result.lastInsertRowid;
+};
 
-    static delete(id, callback) {
-        const sql = "DELETE FROM recipes WHERE recipe_id = ?";
-        const params = [id];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.changes : null);
-        });
-    }
-}
+export const updateRecipe = (id, data) => {
+    const sql = `UPDATE recipes SET 
+                 name = COALESCE(?, name), 
+                 type_of_meat = COALESCE(?, type_of_meat), 
+                 course = COALESCE(?, course), 
+                 description = COALESCE(?, description),
+                 prepTime = COALESCE(?, prepTime),
+                 image_url = COALESCE(?, image_url)
+                 WHERE recipe_id = ?`;
+    const result = db.prepare(sql).run(data.name, data.type_of_meat, data.course, data.description, data.prepTime, data.image_url, id);
+    return result.changes;
+};
 
-export default Recipe;
+export const deleteRecipe = (id) => {
+    const sql = "DELETE FROM recipes WHERE recipe_id = ?";
+    const result = db.prepare(sql).run(id);
+    return result.changes;
+};

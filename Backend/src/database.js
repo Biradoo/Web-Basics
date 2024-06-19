@@ -1,46 +1,50 @@
-import sqlite3 from 'sqlite3';
+import Database from 'better-sqlite3';
 
-const DBSOURCE = "db.sqlite";
+let db;
+try {
+    db = new Database('database.sqlite');
+    console.log('Connected to the SQLite database.');
+} catch (e) {
+    console.error('Error while initializing db!', e);
+    throw e;
+}
 
-const db = new sqlite3.Database(DBSOURCE, (err) => {
-    if (err) {
-        console.error(err.message);
-        throw err;
-    } else {
-        console.log('Connected to the SQLite database.');
-
-        db.run(`CREATE TABLE IF NOT EXISTS recipes (
+const createTables = () => {
+    try {
+        db.exec(`CREATE TABLE IF NOT EXISTS recipes (
             recipe_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name String,
-            type_of_meat String,
-            course String,
-            description String,
-            prepTime TIME,
-            image_url TEXT
-        )`, (err) => {
-            if (err) {
-                console.log('Table already exists.');
-            }
-        });
-
-        db.run(`CREATE TABLE IF NOT EXISTS ingredients (
-            ingredient_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            recipe_id INTEGER,
-            name String,
-            unit String,
-            quantity INTEGER,
-            FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+            name TEXT NOT NULL,
+            type_of_meat TEXT NOT NULL, 
+            course TEXT NOT NULL,
+            description TEXT NOT NULL,
+            prepTime TIME NOT NULL,
+            image_url TEXT NOT NULL
         )`);
 
-        db.run(`CREATE TABLE IF NOT EXISTS reviews (
+        db.exec(`CREATE TABLE IF NOT EXISTS ingredients (
+            ingredient_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            recipe_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            unit TEXT NOT NULL,
+            quantity INTEGER NOT NULL,
+            FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
+        )`);
+
+        db.exec(`CREATE TABLE IF NOT EXISTS reviews (
             review_id INTEGER PRIMARY KEY AUTOINCREMENT,
             recipe_id INTEGER,
-            rating INTEGER,
-            comment String,
-            date DATE,
-            FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id)
+            rating INTEGER NOT NULL,
+            comment TEXT NOT NULL,
+            date DATE NOT NULL,
+            FOREIGN KEY (recipe_id) REFERENCES recipes(recipe_id) ON DELETE CASCADE
         )`);
+        console.log('Tables created or already exist.');
+    } catch (e) {
+        console.error('Error while creating tables!', e);
+        throw e;
     }
-});
+};
+
+createTables();
 
 export default db;

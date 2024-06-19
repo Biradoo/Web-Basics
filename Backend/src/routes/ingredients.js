@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', ingredientController.getAllIngredients);
 router.get('/:id', ingredientController.getIngredientById);
-router.get('/', ingredientController.getIngredientsForRecipe);
+router.get('/recipe/:recipeId', ingredientController.getIngredientsByRecipeId);
 router.post('/', ingredientController.createIngredient);
 router.put('/:id', ingredientController.updateIngredient);
 router.delete('/:id', ingredientController.deleteIngredient);

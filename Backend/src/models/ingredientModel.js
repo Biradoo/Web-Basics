@@ -1,56 +1,38 @@
 import db from '../database.js';
 
-class Ingredient {
-    static getAll(callback) {
-        const sql = "SELECT * FROM ingredients";
-        db.all(sql, [], (err, rows) => {
-            callback(err, rows);
-        });
-    }
+export const getAllIngredients = () => {
+    const sql = "SELECT * FROM ingredients";
+    return db.prepare(sql).all();
+};
 
-    static getById(id, callback) {
-        const sql = "SELECT * FROM ingredients WHERE ingredient_id = ?";
-        const params = [id];
-        db.get(sql, params, (err, row) => {
-            callback(err, row);
-        });
-    }
+export const getIngredientById = (id) => {
+    const sql = "SELECT * FROM ingredients WHERE ingredient_id = ?";
+    return db.prepare(sql).get(id);
+};
 
-    static getByRecipeId(recipe_id, callback) {
-        const sql = "SELECT * FROM ingredients WHERE recipe_id = ?";
-        const params = [recipe_id];
-        db.all(sql, params, (err, rows) => {
-            callback(err, rows);
-        });
-    }
+export const getIngredientsByRecipeId = (recipeId) => {
+    const sql = "SELECT * FROM ingredients WHERE recipe_id = ?";
+    return db.prepare(sql).all(recipeId);
+};
 
-    static create(data, callback) {
-        const sql = 'INSERT INTO ingredients (recipe_id, name, unit, quantity) VALUES (?,?,?,?)';
-        const params = [data.recipe_id, data.name, data.unit, data.quantity];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.lastID : null);
-        });
-    }
+export const createIngredient = (data) => {
+    const sql = 'INSERT INTO ingredients (recipe_id, name, unit, quantity) VALUES (?, ?, ?, ?)';
+    const result = db.prepare(sql).run(data.recipe_id, data.name, data.unit, data.quantity);
+    return result.lastInsertRowid;
+};
 
-    static update(id, data, callback) {
-        const sql = `UPDATE ingredients SET 
-                     name = COALESCE(?,name), 
-                     unit = COALESCE(?,unit), 
-                     quantity = COALESCE(?,quantity) 
-                     WHERE ingredient_id = ?`;
-        const params = [data.name, data.unit, data.quantity, id];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.changes : null);
-        });
-    }
+export const updateIngredient = (id, data) => {
+    const sql = `UPDATE ingredients SET 
+                 name = COALESCE(?, name), 
+                 unit = COALESCE(?, unit), 
+                 quantity = COALESCE(?, quantity)
+                 WHERE ingredient_id = ?`;
+    const result = db.prepare(sql).run(data.name, data.unit, data.quantity, id);
+    return result.changes;
+};
 
-    static delete(id, callback) {
-        const sql = "DELETE FROM ingredients WHERE ingredient_id = ?";
-        const params = [id];
-        db.run(sql, params, function (err) {
-            callback(err, this ? this.changes : null);
-        });
-    }
-}
-
-export default Ingredient;
+export const deleteIngredient = (id) => {
+    const sql = "DELETE FROM ingredients WHERE ingredient_id = ?";
+    const result = db.prepare(sql).run(id);
+    return result.changes;
+};

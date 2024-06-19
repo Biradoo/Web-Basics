@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Haven - Categories</title>
+    <link rel="stylesheet" href="src/styles/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script defer src="src/scripts/categories.js"></script>
+</head>
+<body>
+<img class="recipe-haven-logo" src="assets/logo.png" alt="Recipe Haven Logo" width="500" height="65">
+<hr class="separator">
+<header class="colored">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="recipes.html">Recipes</a>
+        <a class="active" href="categories.html">By Category</a>
+        <a href="ingredients.html">By ingredients</a>
+    </nav>
+</header>
+<main class="category-section">
+    <h2>Recipes by Category</h2>
+    <p>Search over 20 whole food recipes by course, meat, or cuisine.
+        Or scroll to discover the latest recipes from my best, most popular categories!
+        From home cooking to healthy treats and more,
+        you’ll find everything you need to cook up some wholesome and healthy dinners for tonight.</p>
+</main>
+<section class="category-section">
+    <div>
+        <h2>POPULAR CATEGORIES</h2>
+    </div>
+    <div class="all-categories">
+        <div class="category">
+            <a href="recipes.html?category=chicken" data-type="category" data-value="chicken"><img src="assets/recipe-images/chicken-meat.jpeg"></a>
+            <h3>Chicken Dishes</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=beef" data-type="category" data-value="beef"><img src="assets/recipe-images/beef-meat.jpeg"></a>
+            <h3>Beef Dishes</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=pork" data-type="category" data-value="pork"><img src="assets/recipe-images/pork-meat.jpeg"></a>
+            <h3>Pork Dishes</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=seafood" data-type="category" data-value="seafood"><img src="assets/recipe-images/seafood.jpeg"></a>
+            <h3>Seafood Dishes</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=quick_and_easy" data-type="category" data-value="quick_and_easy"><img src="assets/recipe-images/soup.jpeg"></a>
+            <h3>Quick and Easy!</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=starter" data-type="category" data-value="starter"><img src="assets/recipe-images/starter.jpeg"></a>
+            <h3>Starters</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=main" data-type="category" data-value="main"><img src="assets/recipe-images/main-course.jpeg"></a>
+            <h3>Main Courses</h3>
+        </div>
+        <div class="category">
+            <a href="recipes.html?category=dessert" data-type="category" data-value="dessert"><img src="assets/recipe-images/dessert.jpeg"></a>
+            <h3>Desserts</h3>
+        </div>
+    </div>
+</section>
+<footer class="footerClass">
+    <div class="footer-left">
+        <img class="recipe-haven-logo" src="assets/logo.png" alt="Recipe Haven Logo">
+        <ul class="icons">
+            <li><a class="socialIcons" href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a class="socialIcons" href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a></li>
+            <li><a class="socialIcons" href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a></li>
+            <li><a class="socialIcons" href="https://www.linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+        </ul>
+    </div>
+    <div>
+        <ul class="footer-links">
+            <li><a class="footerButtons" href="recipes.html">All recipes</a></li>
+            <li><a class="footerButtons" href="categories.html">By Category</a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>
